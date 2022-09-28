@@ -99,4 +99,6 @@ function selectCurrencyDropdown(element) {
 
     selectedCurrencyFlag.src = ImagebaseUrl.value + hiddenValue.currency + '.png';
 
+    calculate(null);
+
 }

@@ -23,7 +23,7 @@ function wporg_options_page() {
     );  
 }
 
-function daily_currency_view(){
+function daily_currency_view($isforsmallscreen, $seeMorePage){
     // JS
     wp_register_script('prefix_bootstrap', '//cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js');
     wp_enqueue_script('prefix_bootstrap');
@@ -319,12 +319,14 @@ function daily_currency_view(){
                 <div class='tableContainer' style='padding: 0px 15px 0px 10px !important;'>";
 
             echo "<div class='row mb-2'>
-                    <div class='col-sm-6 col-md-6 col-lg-6' style='color: gray !important;'>Currency</div>
-                    <div class='col-sm-3 col-md-3 col-lg-3' style='color: gray !important;'>Buying</div>
-                    <div class='col-sm-3 col-md-3 col-lg-3' style='color: gray !important;'>Selling</div>
+                    <div class='col-6' style='color: gray !important;'>Currency</div>
+                    <div class='col-3' style='color: gray !important;'>Buying</div>
+                    <div class='col-3' style='color: gray !important;'>Selling</div>
                  </div>";    
                  
-                if(count($results) > 0){
+                 if(count($results) > 0){
+                    $i = 0; 
+
                     foreach($results as $key => $value){
                         $hiddenValue = json_encode([
                                                 'buying'=>$value->buying, 
@@ -333,46 +335,68 @@ function daily_currency_view(){
                                                 'currencyText'=> str_replace(' ', '_', $value->currencyText)
                                             ]);
 
-                        if($i < 6){
-                            echo "<div class='row mb-2'>
-                                <div class='col-sm-6 col-md-6 col-lg-6'>
-                                    <span>
-                                        <img src='" . plugins_url( 'assets/images/' . $value->currency . '.png', __FILE__ ) ."' />
-                                    </span>
-                                    <span>
-                                        $value->currencyText
-                                    </span>
-                                    <input type='hidden' id='$value->currency' value=". $hiddenValue ." />
-                                </div>
-                                <div class='col-sm-3 col-md-3 col-lg-3'>
-                                    $value->buying
-                                </div>
-                                <div class='col-sm-3 col-md-3 col-lg-3'>
-                                    $value->selling
-                                </div>
-                             </div>";   
+                        if($isforsmallscreen){
+                            if($i < 6){
+                                echo "<div class='row mb-2'>
+                                    <div class='col-6'>
+                                        <span style='margin-right: 10px; !important'>
+                                            <img src='" . plugins_url( 'assets/images/' . $value->currency . '.png', __FILE__ ) ."' />
+                                        </span>
+                                        <span>
+                                            $value->currencyText
+                                        </span>
+                                        <input type='hidden' id='$value->currency' value=". $hiddenValue ." />
+                                    </div>
+                                    <div class='col-3'>
+                                        $value->buying
+                                    </div>
+                                    <div class='col-3'>
+                                        $value->selling
+                                    </div>
+                                 </div>";   
+    
+                            } else {
+                                break;
+                            }
+    
+                            $i++;
 
                         } else {
-                            break;
+                            echo "<div class='row mb-2'>
+                                    <div class='col-6'>
+                                        <span style='margin-right: 10px; !important'>
+                                            <img src='" . plugins_url( 'assets/images/' . $value->currency . '.png', __FILE__ ) ."' />
+                                        </span>
+                                        <span>
+                                            $value->currencyText
+                                        </span>
+                                        <input type='hidden' id='$value->currency' value=". $hiddenValue ." />
+                                    </div>
+                                    <div class='col-3'>
+                                        $value->buying
+                                    </div>
+                                    <div class='col-3'>
+                                        $value->selling
+                                    </div>
+                                 </div>";  
                         }
-
                     }
 
                     echo "<div class='row mb-4'>
                         <div class='col-sm-12 col-md-12 col-lg-12'>
-                            <span id='seemore' style='
+                            <a id='seemore' style='
                             color: #F88F33 !important;
                             float: right !important;
                             cursor: pointer !important;
                             font-weight: 600 !important;
-                        '>See More</span>     
+                        ' href='$seeMorePage'>See More</a>     
                         </div>
                     </div>";
     
                 } else {
                     echo "
                     <div class='row'>
-                        <div class='col-sm-12 col-md-12 col-lg-12'>
+                        <div class='col-12'>
                             -- no record found --
                         </div>
                     </div>";
@@ -394,15 +418,18 @@ function daily_currency_view(){
                     </p>";
 
                 echo "<div class='row mb-2'>
-                        <div class='col-sm-12 col-md-1 col-lg-1'>
-                            <img id='selectedCurrencyFlag' src='" . plugins_url( 'assets/images/' . $results[0]->currency . '.png', __FILE__ ) ."' />
-                        </div>
-                        <div class='col-sm-12 col-md-4 col-lg-4'>
+                        <div class='col-5'>
+                       
                         <div class='dropdown'>
-                        <button style='margin-top: -5px;' id='currencyDropdownButton' class='btn dropdown-toggle' type='button' 
+                        <button style='margin-top: -5px;' class='btn dropdown-toggle' type='button' 
                             data-bs-toggle='dropdown' aria-expanded='false'>
-                        ".$results[0]->currencyText.
-                        "</button>
+                        <span style='margin-right: 10px !important;'>
+                            <img id='selectedCurrencyFlag' src='" . 
+                            plugins_url( 'assets/images/' . $results[0]->currency . '.png', __FILE__ ) ."' />
+                        </span>
+                        <span id='currencyDropdownButton'>"
+                        .$results[0]->currencyText.
+                        "</span></button>
                         <ul class='dropdown-menu'>";
 
                         $i = 0;
@@ -410,19 +437,28 @@ function daily_currency_view(){
                         echo  "<input type='hidden' id='fromDropdown' value='" . $results[0]->currency . "' />";
 
                         foreach($results as $value){
-                            if($i < 6){
+                            if($isforsmallscreen){
+                                if($i < 6){
+    
+                                    echo "<li>
+                                        <span class='dropdown-item' href='#' onclick='selectCurrencyDropdown($value->currency)'>
+                                            $value->currencyText
+                                        </span>
+                                        </li>";
+    
+                                } else {
+                                    break;
+                                }
 
+                                $i++;
+
+                            } else {
                                 echo "<li>
                                     <span class='dropdown-item' href='#' onclick='selectCurrencyDropdown($value->currency)'>
                                         $value->currencyText
                                     </span>
                                     </li>";
-
-                            } else {
-                                break;
                             }
-
-                            $i++;
 
                         }
                        
@@ -435,13 +471,13 @@ function daily_currency_view(){
                     </div>";   
     
                 echo "<div class='row'>
-                      <div class='col-sm-12 col-md-1 col-lg-1'>
-                        <img id='selectedCurrencyFlag' src='" . plugins_url( 'assets/images/ETB.png', __FILE__ ) ."' />
-                      </div>
-                      <div class='col-sm-12 col-md-4 col-lg-4'>
+                      <div class='col-5'>
                         <div class='dropdown'>
                             <button style='margin-top: -5px;' id='currencyDropdownButton' class='btn dropdown-toggle' type='button' data-bs-toggle='dropdown' aria-expanded='false'>
-                                ETB
+                                <span style='margin-right: 10px !important;'>
+                                    <img id='selectedCurrencyFlag' src='" . plugins_url( 'assets/images/ETB.png', __FILE__ ) ."' />
+                                </span> 
+                                <span>ETB</span>   
                             </button>
                             <ul class='dropdown-menu'></ul>
                         </div>
@@ -461,6 +497,6 @@ function daily_currency_view(){
 
 }
 
-function daily_currency_shortcode(){
-    return daily_currency_view();
+function daily_currency_shortcode($param){
+    return daily_currency_view($param['isforsmallscreen'] == 'true' ? true : false, $param['seemorePage']);
 }

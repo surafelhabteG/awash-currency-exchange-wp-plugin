@@ -1,153 +1,155 @@
 .containerCard {
-    width: 385px !important;
-    padding: 0px !important;
-    background-color: #f9f9f9 !important;
+  /* width: 385px !important; */
+  padding: 0px !important;
+  background-color: #f9f9f9 !important;
 }
 
 .header {
-    color: white !important;
-    background: #F88F33;
-    padding: 15px;
-    /* border-start-start-radius: 10px !important;
-    border-start-end-radius: 10px !important; */
-    font-family: system-ui !important;
-    font-size: 22px !important;
+  color: white !important;
+  background: #F88F33;
+  padding: 15px;
+  border-start-start-radius: 10px !important;
+  border-start-end-radius: 10px !important;
+  font-family: system-ui !important;
+  font-size: 22px !important;
 }
 
 .innerContainer {
-    border-start-start-radius: 10px !important;
-    border-start-end-radius: 10px !important;
-    background: white !important;
+  border-start-start-radius: 10px !important;
+  border-start-end-radius: 10px !important;
+  background: white !important;
+  font-size: 15px !important;
+  font-weight: lighter !important;
 }
 
 .tableContainer {
-  padding: 0px 15px 0px 10px !important;
+padding: 0px 15px 0px 10px !important;
 }
 
 table {
-    width: 100% !important;
-    text-align: center !important;
-    margin-top: -14px !important;
-    font-size: 15px !important;
+  width: 100% !important;
+  text-align: center !important;
+  margin-top: -14px !important;
+  font-size: 15px !important;
 }
 
 .dada {
-  color: red !important;
-  margin-top: 12px !important;
-  font-size: 15px !important;
-  /* font-weight: lighter !important; */
+color: red !important;
+margin-top: 12px !important;
+font-size: 15px !important;
+/* font-weight: lighter !important; */
 }
 
 .subTitle {
-    color: gray !important;
-    margin-top: -8px !important;
-    font-size: 15px !important;
-    font-weight: lighter !important;
-    margin-bottom: 10px !important;
+  color: gray !important;
+  margin-top: -8px !important;
+  font-size: 15px !important;
+  font-weight: lighter !important;
+  margin-bottom: 10px !important;
 }
 
 p {
-    padding: 0px !important;
+  padding: 0px !important;
 }
 
 
 
 .buyingBtn {
-    padding: 7px 15px 7px 15px !important;
-    border: 0px !important;
-    border-radius: 4px !important;
-    font-weight: 500 !important;
-    cursor: pointer !important;
-    background-color: #F88F33;
-    border-color: #CC6C29;
-    color: white;
+  padding: 7px 15px 7px 15px !important;
+  border: 0px !important;
+  border-radius: 4px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  background-color: #F88F33;
+  border-color: #CC6C29;
+  color: white;
 }
 
 .sellingBtn {
-    padding: 7px 15px 7px 15px !important;
-    border: 0px !important;
-    border-radius: 4px !important;
-    font-weight: 500 !important;
-    cursor: pointer !important;
-    background-color: transparent;
-    border-color: transparent;
-    color: gray !important;
+  padding: 7px 15px 7px 15px !important;
+  border: 0px !important;
+  border-radius: 4px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  background-color: transparent;
+  border-color: transparent;
+  color: gray !important;
 }
 
 .convertContainer{
-    padding: 5px 5px 5px 15px !important;
-    margin-top: -18px !important;
+  padding: 5px 5px 5px 15px !important;
+  margin-top: -18px !important;
 }
 
 .currencyConverterHeader {
-  font-size: 24px !important;
+font-size: 24px !important;
 }
 
 img {
-    /* width: 30px !important;
-    height: 30px !important; */
+  /* width: 30px !important;
+  height: 30px !important; */
 }
 
 .currencyTH{
-    text-align: left !important;
+  text-align: left !important;
 }
 
 .minimal {
-    border: 0 !important;
-    background: transparent !important;
-    color: darkblue !important;
-    font-weight: bolder !important;
-    font-size: 19px !important;
-    float: right !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: darkblue !important;
+  font-weight: bolder !important;
+  font-size: 19px !important;
+  float: right !important;
 }
 
 input {
-    width: 100% !important;
-    height: 44px !important;
-    border-color: #DADADA !important;
+  width: 100% !important;
+  height: 44px !important;
+  border-color: #DADADA !important;
 }
 
 
 #seemore {
-  color: #CC6C29 !important;
-  float: right !important;
+color: #CC6C29 !important;
+float: right !important;
 }
 /* select caret */
 
 /* select.minimal {
-    background-image:
-      linear-gradient(45deg, transparent 50%, gray 50%),
-      linear-gradient(135deg, gray 50%, transparent 50%),
-      linear-gradient(to right, #ccc, #ccc);
-    background-position:
-      calc(100% - 20px) calc(1em + 2px),
-      calc(100% - 15px) calc(1em + 2px),
-      calc(100% - 2.5em) 0.5em;
-    background-size:
-      5px 5px,
-      5px 5px,
-      1px 1.5em;
-    background-repeat: no-repeat;
-  }
-  
-  select.minimal:focus {
-    background-image:
-      linear-gradient(45deg, green 50%, transparent 50%),
-      linear-gradient(135deg, transparent 50%, green 50%),
-      linear-gradient(to right, #ccc, #ccc);
-    background-position:
-      calc(100% - 15px) 1em,
-      calc(100% - 20px) 1em,
-      calc(100% - 2.5em) 0.5em;
-    background-size:
-      5px 5px,
-      5px 5px,
-      1px 1.5em;
-    background-repeat: no-repeat;
-    border-color: green;
-    outline: 0;
-  } */
+  background-image:
+    linear-gradient(45deg, transparent 50%, gray 50%),
+    linear-gradient(135deg, gray 50%, transparent 50%),
+    linear-gradient(to right, #ccc, #ccc);
+  background-position:
+    calc(100% - 20px) calc(1em + 2px),
+    calc(100% - 15px) calc(1em + 2px),
+    calc(100% - 2.5em) 0.5em;
+  background-size:
+    5px 5px,
+    5px 5px,
+    1px 1.5em;
+  background-repeat: no-repeat;
+}
 
-  #currencyDropdownButton {
-    margin-top: -5px !important;
-  }
+select.minimal:focus {
+  background-image:
+    linear-gradient(45deg, green 50%, transparent 50%),
+    linear-gradient(135deg, transparent 50%, green 50%),
+    linear-gradient(to right, #ccc, #ccc);
+  background-position:
+    calc(100% - 15px) 1em,
+    calc(100% - 20px) 1em,
+    calc(100% - 2.5em) 0.5em;
+  background-size:
+    5px 5px,
+    5px 5px,
+    1px 1.5em;
+  background-repeat: no-repeat;
+  border-color: green;
+  outline: 0;
+} */
+
+#currencyDropdownButton {
+  margin-top: -5px !important;
+}
