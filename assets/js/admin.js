@@ -19,28 +19,32 @@ function confirmation() {
 
 }
 
-function calculate(e, choice) {
-    if (e.key === "Enter") {
-        e.preventDefault();
+function calculate(choice = null) {
+    const selectedButton = document.getElementById('selectedButton');
+    if (choice !== null) {
+        var isfrom = choice == 1 ? true : false;
 
-        const selectedButton = document.getElementById('selectedButton');
+        const selectedkeydown = document.getElementById('selectedkeydown');
+        selectedkeydown.value = choice;
 
-        var isfrom = choice === 1 ? true : false;
-
-        var hiddenValue = JSON.parse(document.getElementById(document.getElementById('fromDropdown').value).value);
-
-        if (selectedButton.value == 1) {
-            hiddenValue = hiddenValue.buying;
-
-        } else {
-            hiddenValue = hiddenValue.selling;
-        }
-
-        var textBoxValue = document.getElementById(isfrom ? 'fromValue' : 'toValue').value;
-
-        document.getElementById(isfrom ? 'toValue' : 'fromValue').value =
-            isfrom ? (+hiddenValue * +textBoxValue) : (+textBoxValue / +hiddenValue);
+    } else {
+        var isfrom = selectedkeydown.value == 1 ? true : false;
     }
+
+    var hiddenValue = JSON.parse(document.getElementById(document.getElementById('fromDropdown').value).value);
+
+    if (selectedButton.value == 1) {
+        hiddenValue = hiddenValue.buying;
+
+    } else {
+        hiddenValue = hiddenValue.selling;
+    }
+
+    var textBoxValue = document.getElementById(isfrom ? 'fromValue' : 'toValue').value;
+
+    document.getElementById(isfrom ? 'toValue' : 'fromValue').value =
+        isfrom ? (+hiddenValue * +textBoxValue) : (+textBoxValue / +hiddenValue);
+
 }
 
 function clear(e) {
@@ -63,6 +67,8 @@ function setSelectedButton(value = 1) {
         sellingBtn.style.borderColor = 'transparent';
         sellingBtn.style.color = 'gray';
 
+        calculate(null);
+
     } else {
         const sellingBtn = document.getElementById('sellingBtn');
         sellingBtn.style.backgroundColor = '#F88F33';
@@ -73,5 +79,24 @@ function setSelectedButton(value = 1) {
         buyingBtn.style.backgroundColor = 'transparent';
         buyingBtn.style.borderColor = 'transparent';
         buyingBtn.style.color = 'gray';
+
+        calculate(null);
+
     }
+}
+
+function selectCurrencyDropdown(element) {
+    var hiddenValue = JSON.parse(element.value);
+
+    const currencyDropdownButton = document.getElementById('currencyDropdownButton');
+    currencyDropdownButton.innerText = hiddenValue.currencyText.replaceAll('_', ' ');
+
+    const fromDropdown = document.getElementById('fromDropdown');
+    fromDropdown.value = hiddenValue.currency;
+
+    const selectedCurrencyFlag = document.getElementById('selectedCurrencyFlag');
+    const ImagebaseUrl = document.getElementById('ImagebaseUrl');
+
+    selectedCurrencyFlag.src = ImagebaseUrl.value + hiddenValue.currency + '.png';
+
 }

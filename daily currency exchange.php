@@ -28,14 +28,17 @@ function daily_currency_view(){
     wp_register_script('prefix_bootstrap', '//cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js');
     wp_enqueue_script('prefix_bootstrap');
 
+    wp_register_script('jquery', '//code.jquery.com/jquery-3.5.1.slim.min.js');
+    wp_enqueue_script('jquery');
+
     wp_register_script('admin', plugins_url('assets/js/admin.js', __FILE__));
 	wp_enqueue_script('admin');
 
     // CSS
-    wp_enqueue_style( 'admin', plugins_url( 'assets/css/admin.css', __FILE__ ), false, '1.0', 'all' );
-
     wp_register_style('prefix_bootstrap', '//cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css');    
     wp_enqueue_style('prefix_bootstrap');
+
+    wp_enqueue_style( 'admin', plugins_url( 'assets/css/admin.css', __FILE__ ), false, '1.0', 'all' );
 
         global $wpdb;
         $success = $errors = false;
@@ -224,6 +227,7 @@ function daily_currency_view(){
                                     <input type='text' class='form-control mb-4' name='GBP[2]' value='1 GBP (£)' placeholder='1 GBP (£)' readonly />
                                     <input type='text' class='form-control mb-4' name='CAD[2]' value='1 CAD ($)' placeholder='1 CAD ($)' readonly />
                                     <input type='text' class='form-control mb-4' name='AED[2]' value='1 AED (د.إ)' placeholder='1 AED (د.إ)' readonly />
+                                    <input type='text' class='form-control mb-4' name='YUA[2]' value='1 YUA (€)' placeholder='1 YUA (¥)' readonly />
                                     <input type='text' class='form-control mb-4' name='CHF[2]' value='1 CHF (€)' placeholder='1 CHF (€)' readonly />
                                 </div>
                                 <div class='col-sm-12 col-md-2 col-lg-2'>
@@ -242,9 +246,12 @@ function daily_currency_view(){
     
                                     <input type='number' step='any' class='form-control mb-4' name='AED[0]' value='" . $editResults[4]->buying  . "'min='1' />
                                     <input type='hidden' name='AED[3]' value='" . $editResults[4]->id . "' />
-    
-                                    <input type='number' step='any' class='form-control mb-4' name='CHF[0]' value='" . $editResults[5]->buying  . "'min='1' />
-                                    <input type='hidden' name='CHF[3]' value='" . $editResults[5]->id .  "' />
+
+                                    <input type='number' step='any' class='form-control mb-4' name='YUA[0]' value='" . $editResults[5]->buying  . "'min='1' />
+                                    <input type='hidden' name='YUA[3]' value='" . $editResults[5]->id . "' />
+
+                                    <input type='number' step='any' class='form-control mb-4' name='CHF[0]' value='" . $editResults[6]->buying  . "'min='1' />
+                                    <input type='hidden' name='CHF[3]' value='" . $editResults[6]->id .  "' />
     
                                 </div>
                                 <div class='col-sm-12 col-md-2 col-lg-2'>
@@ -259,7 +266,9 @@ function daily_currency_view(){
     
                                     <input type='number' step='any' class='form-control mb-4' name='AED[1]' value='" . $editResults[4]->selling . "'min='1' />
     
-                                    <input type='number' step='any' class='form-control mb-4' name='CHF[1]' value='" . $editResults[5]->selling . "'min='1' />
+                                    <input type='number' step='any' class='form-control mb-4' name='YUA[1]' value='" . $editResults[5]->selling . "'min='1' />
+
+                                    <input type='number' step='any' class='form-control mb-4' name='CHF[1]' value='" . $editResults[6]->selling . "'min='1' />
                                 </div>
                             </div>
                             <div class='row'>
@@ -301,72 +310,145 @@ function daily_currency_view(){
                 
                 $errors = $wpdb->print_error();
             }
-    
+
             echo "<div class='containerCard'>
                 <div class='innerContainer'>
                 <h3 class='header'>
                     Excange Rate " . date('M d, Y') .
                 "</h3>
-                <div class='tableContainer'>
-                <table cellpadding='5'>
-                <thead>
-                    <tr><th colspan='2' class='currencyTH'>Currency</th><th>Buying</th><th>Selling</th></tr>
-                </thead>   
-                <tbody>";
-    
+                <div class='tableContainer' style='padding: 0px 15px 0px 10px !important;'>";
+
+            echo "<div class='row mb-2'>
+                    <div class='col-sm-6 col-md-6 col-lg-6' style='color: gray !important;'>Currency</div>
+                    <div class='col-sm-3 col-md-3 col-lg-3' style='color: gray !important;'>Buying</div>
+                    <div class='col-sm-3 col-md-3 col-lg-3' style='color: gray !important;'>Selling</div>
+                 </div>";    
+                 
                 if(count($results) > 0){
                     foreach($results as $key => $value){
-                        $hiddenValue = json_encode(['buying'=>$value->buying, 'selling'=>$value->selling,'currency'=>$value->currency]);
-    
-                        echo "<tr>
-                            <td><img src='" . plugins_url( 'assets/images/' . $value->currency . '.png', __FILE__ ) ."' /></td>
-                            <td>
-                                1 $value->currencyText
-                                <input type='hidden' id='$value->currency' value=". $hiddenValue ." />
-                            </td>
-                            <td>$value->buying</td>
-                            <td>$value->selling</td>
-                            </tr>";
+                        $hiddenValue = json_encode([
+                                                'buying'=>$value->buying, 
+                                                'selling'=>$value->selling,
+                                                'currency'=>$value->currency, 
+                                                'currencyText'=> str_replace(' ', '_', $value->currencyText)
+                                            ]);
+
+                        if($i < 6){
+                            echo "<div class='row mb-2'>
+                                <div class='col-sm-6 col-md-6 col-lg-6'>
+                                    <span>
+                                        <img src='" . plugins_url( 'assets/images/' . $value->currency . '.png', __FILE__ ) ."' />
+                                    </span>
+                                    <span>
+                                        $value->currencyText
+                                    </span>
+                                    <input type='hidden' id='$value->currency' value=". $hiddenValue ." />
+                                </div>
+                                <div class='col-sm-3 col-md-3 col-lg-3'>
+                                    $value->buying
+                                </div>
+                                <div class='col-sm-3 col-md-3 col-lg-3'>
+                                    $value->selling
+                                </div>
+                             </div>";   
+
+                        } else {
+                            break;
+                        }
+
                     }
+
+                    echo "<div class='row mb-4'>
+                        <div class='col-sm-12 col-md-12 col-lg-12'>
+                            <span id='seemore' style='
+                            color: #F88F33 !important;
+                            float: right !important;
+                            cursor: pointer !important;
+                            font-weight: 600 !important;
+                        '>See More</span>     
+                        </div>
+                    </div>";
     
                 } else {
-                    echo "<tr><td colspan='5'>-- no record found --</td></tr>";
+                    echo "
+                    <div class='row'>
+                        <div class='col-sm-12 col-md-12 col-lg-12'>
+                            -- no record found --
+                        </div>
+                    </div>";
                 }  
                 
-                echo  "</tbody></table></div></div>";   
+                echo  "</div></div>";   
+
+                $url = plugins_url( 'assets/images/',  __FILE__ );
+                echo  "<input type='hidden' id='ImagebaseUrl' value='$url' />";
     
-                echo "<div class='convertContainer'>
-                    <h3 class='currencyConverterHeader'>Currency Converter</h3>
+                echo "<div class='convertContainer' style='margin-top: -18px !important;'>
+                    <h4 class='currencyConverterHeader'>Currency Converter</h4>
                     <p class='subTitle'>Insert the amount you want to calculate</p>
                     <p><input type='hidden' id='selectedButton' value='1' /></p>
+                    <p><input type='hidden' id='selectedkeydown' value='' /></p>
                     <p>
                         <span><button class='buyingBtn' id='buyingBtn' onclick='setSelectedButton(1)'>Buying</button></span>
                         <span><button class='sellingBtn' id='sellingBtn' onclick='setSelectedButton(2)'>Selling</button></span>
                     </p>";
-    
-                echo "<div class='row'>
+
+                echo "<div class='row mb-2'>
+                        <div class='col-sm-12 col-md-1 col-lg-1'>
+                            <img id='selectedCurrencyFlag' src='" . plugins_url( 'assets/images/' . $results[0]->currency . '.png', __FILE__ ) ."' />
+                        </div>
                         <div class='col-sm-12 col-md-4 col-lg-4'>
-                            <select id='fromDropdown' onchange='clear()' class='minimal form-control mb-4'>";
-                                foreach($results as $value){
-                                    echo "<option value='$value->currency'>
-                                            <img src='" . plugins_url( 'assets/images/' . $value->currency . '.png', __FILE__ ) ."' />
-                                            $value->currencyText
-                                        </option>";
-                                }
-                echo "</select></div>
-                        <div class='col-sm-12 col-md-8 col-lg-8'>
-                            <input type='number' class='form-control' id='fromValue' onkeypress='calculate(event, 1)' />
+                        <div class='dropdown'>
+                        <button style='margin-top: -5px;' id='currencyDropdownButton' class='btn dropdown-toggle' type='button' 
+                            data-bs-toggle='dropdown' aria-expanded='false'>
+                        ".$results[0]->currencyText.
+                        "</button>
+                        <ul class='dropdown-menu'>";
+
+                        $i = 0;
+
+                        echo  "<input type='hidden' id='fromDropdown' value='" . $results[0]->currency . "' />";
+
+                        foreach($results as $value){
+                            if($i < 6){
+
+                                echo "<li>
+                                    <span class='dropdown-item' href='#' onclick='selectCurrencyDropdown($value->currency)'>
+                                        $value->currencyText
+                                    </span>
+                                    </li>";
+
+                            } else {
+                                break;
+                            }
+
+                            $i++;
+
+                        }
+                       
+                echo "</ul></div>";
+
+                echo "</div>
+                        <div class='col-sm-12 col-md-7 col-lg-7'>
+                            <input type='number' class='form-control' id='fromValue' value=0 min=0 onkeyup='calculate(1)' />
                         </div>
                     </div>";   
     
                 echo "<div class='row'>
+                      <div class='col-sm-12 col-md-1 col-lg-1'>
+                        <img id='selectedCurrencyFlag' src='" . plugins_url( 'assets/images/ETB.png', __FILE__ ) ."' />
+                      </div>
                       <div class='col-sm-12 col-md-4 col-lg-4'>
-                        <select name='actions' id='toDropdown' class='minimal form-control mb-4' disabled>
-                        <option value='ETB'>ETB</option>
-                      </select></div>";
+                        <div class='dropdown'>
+                            <button style='margin-top: -5px;' id='currencyDropdownButton' class='btn dropdown-toggle' type='button' data-bs-toggle='dropdown' aria-expanded='false'>
+                                ETB
+                            </button>
+                            <ul class='dropdown-menu'></ul>
+                        </div>
+                      </div>";
     
-                echo "<div class='col-sm-12 col-md-8 col-lg-8'>
-                        <input type='number' class='form-control' id='toValue' onkeypress='calculate(event, 2)' />
+                echo "<div class='col-sm-12 col-md-7 col-lg-7'>
+                        <input type='number' class='form-control' id='toValue' value=0 min=0 onkeyup='calculate(2)' />
                     </div>
                 </div>";
             

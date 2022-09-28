@@ -1,13 +1,15 @@
 .containerCard {
-    width: 445px !important;
-    padding: 11px;
+    width: 385px !important;
+    padding: 0px !important;
     background-color: #f9f9f9 !important;
 }
 
 .header {
-    color: white;background: #F88F33;padding: 15px;
-    border-start-start-radius: 10px !important;
-    border-start-end-radius: 10px !important;
+    color: white !important;
+    background: #F88F33;
+    padding: 15px;
+    /* border-start-start-radius: 10px !important;
+    border-start-end-radius: 10px !important; */
     font-family: system-ui !important;
     font-size: 22px !important;
 }
@@ -19,7 +21,7 @@
 }
 
 .tableContainer {
-    padding: 10px !important;
+  padding: 0px 15px 0px 10px !important;
 }
 
 table {
@@ -29,21 +31,26 @@ table {
     font-size: 15px !important;
 }
 
-thead tr {
-    color: gray !important;
+.dada {
+  color: red !important;
+  margin-top: 12px !important;
+  font-size: 15px !important;
+  /* font-weight: lighter !important; */
 }
 
 .subTitle {
     color: gray !important;
-    margin-top: 12px !important;
+    margin-top: -8px !important;
     font-size: 15px !important;
     font-weight: lighter !important;
-    margin-bottom: 20px !important;
+    margin-bottom: 10px !important;
 }
 
 p {
     padding: 0px !important;
 }
+
+
 
 .buyingBtn {
     padding: 7px 15px 7px 15px !important;
@@ -64,15 +71,16 @@ p {
     cursor: pointer !important;
     background-color: transparent;
     border-color: transparent;
+    color: gray !important;
 }
 
 .convertContainer{
     padding: 5px 5px 5px 15px !important;
-    margin-top: 25px !important;
+    margin-top: -18px !important;
 }
 
 .currencyConverterHeader {
-    font-size: 24px !important;
+  font-size: 24px !important;
 }
 
 img {
@@ -99,9 +107,14 @@ input {
     border-color: #DADADA !important;
 }
 
+
+#seemore {
+  color: #CC6C29 !important;
+  float: right !important;
+}
 /* select caret */
 
-select.minimal {
+/* select.minimal {
     background-image:
       linear-gradient(45deg, transparent 50%, gray 50%),
       linear-gradient(135deg, gray 50%, transparent 50%),
@@ -133,4 +146,8 @@ select.minimal {
     background-repeat: no-repeat;
     border-color: green;
     outline: 0;
+  } */
+
+  #currencyDropdownButton {
+    margin-top: -5px !important;
   }
