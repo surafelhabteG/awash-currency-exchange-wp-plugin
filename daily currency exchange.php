@@ -23,7 +23,7 @@ function wporg_options_page() {
     );  
 }
 
-function daily_currency_view($isforsmallscreen, $seeMorePage){
+function daily_currency_view($isforsmallscreen){
     // JS
     wp_register_script('prefix_bootstrap', '//cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js');
     wp_enqueue_script('prefix_bootstrap');
@@ -299,197 +299,198 @@ function daily_currency_view($isforsmallscreen, $seeMorePage){
     
             global $wpdb;
             $results = [];
+            $today = date('M d, Y');
     
-    
-            if (isset($_POST['date'])){
-                $results = $wpdb->get_results("SELECT * FROM aw360_daily_currency_exchange WHERE dates = $_POST[date]"); 
+            $results = $wpdb->get_results("SELECT * FROM aw360_daily_currency_exchange WHERE dates = '" . date('Y-m-d') . "'"); 
+
+            if (count($results) == 0){
+                $results = $wpdb->get_results("SELECT * FROM aw360_daily_currency_exchange 
+                        WHERE dates = '" . date("Y-m-d", strtotime("yesterday")) . "'"); 
+
+               $today = date("M d, Y", strtotime("yesterday"));         
         
-            } else {
-                $results = $wpdb->get_results("SELECT * FROM aw360_daily_currency_exchange WHERE dates = '" . date('Y-m-d') . "'"); 
-                // $results = $wpdb->get_results("SELECT * FROM aw360_daily_currency_exchange WHERE dates = '2022-09-19'"); 
-                
-                $errors = $wpdb->print_error();
-            }
+            } 
+
+            $errors = $wpdb->print_error();
 
             echo "<div class='containerCard'>
-                <div class='innerContainer'>
-                <h3 class='header'>
-                    Excange Rate " . date('M d, Y') .
-                "</h3>
-                <div class='tableContainer' style='padding: 0px 15px 0px 10px !important;'>";
+                    <div class='innerContainer'>
+                        <h3 class='header'>
+                            Excange Rate " . $today .
+                        "</h3>
+                        <div class='tableContainer' style='padding: 0px 15px 0px 10px !important;'>";
 
             echo "<div class='row mb-2'>
                     <div class='col-6' style='color: gray !important;'>Currency</div>
                     <div class='col-3' style='color: gray !important;'>Buying</div>
                     <div class='col-3' style='color: gray !important;'>Selling</div>
-                 </div>";    
+                </div>";    
                  
-                 if(count($results) > 0){
-                    $i = 0; 
+            if(count($results) > 0){
 
-                    foreach($results as $key => $value){
-                        $hiddenValue = json_encode([
-                                                'buying'=>$value->buying, 
-                                                'selling'=>$value->selling,
-                                                'currency'=>$value->currency, 
-                                                'currencyText'=> str_replace(' ', '_', $value->currencyText)
-                                            ]);
+                foreach($results as $key => $value){
+                    $hiddenValue = json_encode([
+                                            'buying'=>$value->buying, 
+                                            'selling'=>$value->selling,
+                                            'currency'=>$value->currency, 
+                                            'currencyText'=> str_replace(' ', '_', $value->currencyText)
+                                        ]);
 
-                        if($isforsmallscreen){
-                            if($i < 6){
-                                echo "<div class='row mb-2'>
-                                    <div class='col-6'>
-                                        <span style='margin-right: 10px; !important'>
-                                            <img src='" . plugins_url( 'assets/images/' . $value->currency . '.png', __FILE__ ) ."' />
-                                        </span>
-                                        <span>
-                                            $value->currencyText
-                                        </span>
-                                        <input type='hidden' id='$value->currency' value=". $hiddenValue ." />
-                                    </div>
-                                    <div class='col-3'>
-                                        $value->buying
-                                    </div>
-                                    <div class='col-3'>
-                                        $value->selling
-                                    </div>
-                                 </div>";   
-    
-                            } else {
-                                break;
-                            }
-    
-                            $i++;
-
-                        } else {
-                            echo "<div class='row mb-2'>
-                                    <div class='col-6'>
-                                        <span style='margin-right: 10px; !important'>
-                                            <img src='" . plugins_url( 'assets/images/' . $value->currency . '.png', __FILE__ ) ."' />
-                                        </span>
-                                        <span>
-                                            $value->currencyText
-                                        </span>
-                                        <input type='hidden' id='$value->currency' value=". $hiddenValue ." />
-                                    </div>
-                                    <div class='col-3'>
-                                        $value->buying
-                                    </div>
-                                    <div class='col-3'>
-                                        $value->selling
-                                    </div>
-                                 </div>";  
-                        }
-                    }
-
-                    echo "<div class='row mb-4'>
-                        <div class='col-sm-12 col-md-12 col-lg-12'>
-                            <a id='seemore' style='
-                            color: #F88F33 !important;
-                            float: right !important;
-                            cursor: pointer !important;
-                            font-weight: 600 !important;
-                        ' href='$seeMorePage'>See More</a>     
-                        </div>
-                    </div>";
-    
-                } else {
-                    echo "
-                    <div class='row'>
-                        <div class='col-12'>
-                            -- no record found --
-                        </div>
-                    </div>";
-                }  
-                
-                echo  "</div></div>";   
-
-                $url = plugins_url( 'assets/images/',  __FILE__ );
-                echo  "<input type='hidden' id='ImagebaseUrl' value='$url' />";
-    
-                echo "<div class='convertContainer' style='margin-top: -18px !important;'>
-                    <h4 class='currencyConverterHeader'>Currency Converter</h4>
-                    <p class='subTitle'>Insert the amount you want to calculate</p>
-                    <p><input type='hidden' id='selectedButton' value='1' /></p>
-                    <p><input type='hidden' id='selectedkeydown' value='' /></p>
-                    <p>
-                        <span><button class='buyingBtn' id='buyingBtn' onclick='setSelectedButton(1)'>Buying</button></span>
-                        <span><button class='sellingBtn' id='sellingBtn' onclick='setSelectedButton(2)'>Selling</button></span>
-                    </p>";
-
-                echo "<div class='row mb-2'>
-                        <div class='col-5'>
-                       
-                        <div class='dropdown'>
-                        <button style='margin-top: -5px;' class='btn dropdown-toggle' type='button' 
-                            data-bs-toggle='dropdown' aria-expanded='false'>
-                        <span style='margin-right: 10px !important;'>
-                            <img id='selectedCurrencyFlag' src='" . 
-                            plugins_url( 'assets/images/' . $results[0]->currency . '.png', __FILE__ ) ."' />
-                        </span>
-                        <span id='currencyDropdownButton'>"
-                        .$results[0]->currencyText.
-                        "</span></button>
-                        <ul class='dropdown-menu'>";
-
-                        $i = 0;
-
-                        echo  "<input type='hidden' id='fromDropdown' value='" . $results[0]->currency . "' />";
-
-                        foreach($results as $value){
-                            if($isforsmallscreen){
-                                if($i < 6){
-    
-                                    echo "<li>
-                                        <span class='dropdown-item' href='#' onclick='selectCurrencyDropdown($value->currency)'>
-                                            $value->currencyText
-                                        </span>
-                                        </li>";
-    
-                                } else {
-                                    break;
-                                }
-
-                                $i++;
-
-                            } else {
-                                echo "<li>
-                                    <span class='dropdown-item' href='#' onclick='selectCurrencyDropdown($value->currency)'>
+                    if($isforsmallscreen){
+                        if(in_array($value->currency, ['USD','EUR','GBP','CAD','AED','YUA'])){
+                            echo "<div class='row customRow mb-2'>
+                                <div class='col-6'>
+                                    <span style='margin-right: 10px; !important'>
+                                        <img src='" . plugins_url( 'assets/images/' . $value->currency . '.png', __FILE__ ) ."' />
+                                    </span>
+                                    <span>
                                         $value->currencyText
                                     </span>
-                                    </li>";
-                            }
+                                    <input type='hidden' id='$value->currency' value=". $hiddenValue ." />
+                                </div>
+                                <div class='col-3'>
+                                    $value->buying
+                                </div>
+                                <div class='col-3'>
+                                    $value->selling
+                                </div>
+                                </div>";   
 
+                        } else {
+                            break;
                         }
-                       
-                echo "</ul></div>";
 
-                echo "</div>
-                        <div class='col-sm-12 col-md-7 col-lg-7'>
-                            <input type='number' class='form-control' id='fromValue' value=0 min=0 onkeyup='calculate(1)' />
-                        </div>
-                    </div>";   
-    
-                echo "<div class='row'>
-                      <div class='col-5'>
-                        <div class='dropdown'>
-                            <button style='margin-top: -5px;' id='currencyDropdownButton' class='btn dropdown-toggle' type='button' data-bs-toggle='dropdown' aria-expanded='false'>
-                                <span style='margin-right: 10px !important;'>
-                                    <img id='selectedCurrencyFlag' src='" . plugins_url( 'assets/images/ETB.png', __FILE__ ) ."' />
-                                </span> 
-                                <span>ETB</span>   
-                            </button>
-                            <ul class='dropdown-menu'></ul>
-                        </div>
-                      </div>";
-    
-                echo "<div class='col-sm-12 col-md-7 col-lg-7'>
-                        <input type='number' class='form-control' id='toValue' value=0 min=0 onkeyup='calculate(2)' />
-                    </div>
-                </div>";
+                    } else {
+                        echo "<div class='row customRow mb-2'>
+                                <div class='col-6'>
+                                    <span style='margin-right: 10px; !important'>
+                                        <img src='" . plugins_url( 'assets/images/' . $value->currency . '.png', __FILE__ ) ."' />
+                                    </span>
+                                    <span>
+                                        $value->currencyText
+                                    </span>
+                                    <input type='hidden' id='$value->currency' value=". $hiddenValue ." />
+                                </div>
+                                <div class='col-3'>
+                                    $value->buying
+                                </div>
+                                <div class='col-3'>
+                                    $value->selling
+                                </div>
+                                </div>";  
+                    }
+                }
+
+                    if($isforsmallscreen){
+                        echo "<div class='row mb-4'>
+                            <div class='col-sm-12 col-md-12 col-lg-12'>
+                                <a id='seemore' style='
+                                color: #F88F33 !important;
+                                float: right !important;
+                                cursor: pointer !important;
+                                font-weight: 600 !important;
+                            ' href='" . esc_url( home_url( '/daily-currency-exchange-rate' )) ."'>See More</a>     
+                            </div>
+                            </div>";
+                    }
+
+                    echo "<div class='convertContainer' style='margin-top: 2px !important;'>
+                            <h4 class='currencyConverterHeader'>Currency Converter</h4>
+                            <p class='subTitle'>Insert the amount you want to calculate</p>
+                            <p><input type='hidden' id='selectedButton' value='1' /></p>
+                            <p><input type='hidden' id='selectedkeydown' value='' /></p>
+                            <p>
+                                <span><button class='buyingBtn' id='buyingBtn' onclick='setSelectedButton(1)'>Buying</button></span>
+                                <span><button class='sellingBtn' id='sellingBtn' onclick='setSelectedButton(2)'>Selling</button></span>
+                            </p>";
+        
+                    echo "<div class='row mb-2'>
+                            <div class='col-5'>
+                                <div class='dropdown'>
+                                <button style='margin-top: -5px;' class='btn dropdown-toggle' type='button' 
+                                    data-bs-toggle='dropdown' aria-expanded='false'>
+                                    <span style='margin-right: 10px !important;'>
+                                        <img id='selectedCurrencyFlag' src='" . 
+                                        plugins_url( 'assets/images/' . $results[0]->currency . '.png', __FILE__ ) ."' />
+                                    </span>
+                                    <span id='currencyDropdownButton'>"
+                                    .$results[0]->currencyText.
+                                    "</span>
+                                </button>
+                                <ul class='dropdown-menu'>";
+        
+                                $i = 0;
+        
+                                echo  "<input type='hidden' id='fromDropdown' value='" . $results[0]->currency . "' />";
+        
+                                foreach($results as $value){
+                                    if($isforsmallscreen){
+                                        if($i < 6){
             
-                echo "</div></div>";  
-                    
+                                            echo "<li>
+                                                <span class='dropdown-item' href='#' onclick='selectCurrencyDropdown($value->currency)'>
+                                                    $value->currencyText
+                                                </span>
+                                                </li>";
+            
+                                        } else {
+                                            break;
+                                        }
+        
+                                        $i++;
+        
+                                    } else {
+                                        echo "<li>
+                                            <span class='dropdown-item' href='#' onclick='selectCurrencyDropdown($value->currency)'>
+                                                $value->currencyText
+                                            </span>
+                                            </li>";
+                                    }
+        
+                                }
+                            
+                    echo "</ul>
+                        </div>";
+        
+                    echo "</div>
+                            <div class='col-sm-12 col-md-7 col-lg-7'>
+                                <input type='number' class='form-control' id='fromValue' value=0 min=0 onkeyup='calculate(1)' />
+                            </div>
+                        </div>";   
+            
+                    echo "<div class='row'>
+                            <div class='col-5'>
+                            <div class='dropdown'>
+                                <button style='margin-top: -5px;' id='currencyDropdownButton' class='btn dropdown-toggle' type='button' data-bs-toggle='dropdown' aria-expanded='false'>
+                                    <span style='margin-right: 10px !important;'>
+                                        <img id='selectedCurrencyFlag' src='" . plugins_url( 'assets/images/ETB.png', __FILE__ ) ."' />
+                                    </span> 
+                                    <span>ETB</span>   
+                                </button>
+                                <ul class='dropdown-menu'></ul>
+                            </div>
+                            </div>";
+            
+                    echo "<div class='col-sm-12 col-md-7 col-lg-7'>
+                            <input type='number' class='form-control' id='toValue' value=0 min=0 onkeyup='calculate(2)' />
+                            </div>
+                        </div>";
+                        
+                    echo "</div>";  
+           
+                } else {
+                    echo "<div class='row'><div class='col-12' style='
+                    text-align: center;
+                '>-- no record found --</div></div>";
+                }  
+                
+            echo  "</div></div>";   
+
+            $url = plugins_url( 'assets/images/',  __FILE__ );
+            echo  "<input type='hidden' id='ImagebaseUrl' value='$url' />";
+    
+            echo "</div>";  
+        
                 // echo "</nav></div>";
             }
 
@@ -498,5 +499,5 @@ function daily_currency_view($isforsmallscreen, $seeMorePage){
 }
 
 function daily_currency_shortcode($param){
-    return daily_currency_view($param['isforsmallscreen'] == 'true' ? true : false, $param['seemorePage']);
+    return daily_currency_view($param['isforsmallscreen'] == 'true' ? true : false);
 }

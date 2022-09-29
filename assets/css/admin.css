@@ -18,8 +18,8 @@
   border-start-start-radius: 10px !important;
   border-start-end-radius: 10px !important;
   background: white !important;
-  font-size: 15px !important;
-  font-weight: lighter !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
 }
 
 .tableContainer {
@@ -77,8 +77,8 @@ p {
 }
 
 .convertContainer{
-  padding: 5px 5px 5px 15px !important;
-  margin-top: -18px !important;
+  padding: 5px 5px 5px 2px !important;
+  margin-top: 2px !important;
 }
 
 .currencyConverterHeader {
@@ -152,4 +152,9 @@ select.minimal:focus {
 
 #currencyDropdownButton {
   margin-top: -5px !important;
+}
+
+.customRow:hover {
+  background-color: #F0F1F2 !important;
+  cursor: pointer !important;
 }
